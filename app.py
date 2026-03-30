@@ -10,7 +10,7 @@ st.set_page_config(
 
 # 标题
 st.title("🧮 AI数学小老师")
-st.subheader("8岁程序员作品")
+st.subheader("8岁程序员嵩嵩作品")
 
 # 选择题型
 topic = st.selectbox(
@@ -79,5 +79,6 @@ elif topic == "分数问题":
 
 # 页脚
 st.sidebar.markdown("---")
+st.sidebar.write("👨‍👩‍👧 张纪嵩")
 st.sidebar.write("👨‍👩‍👧 父子联合开发")
 st.sidebar.write("🚀 用AI学习，而不是被学习")
