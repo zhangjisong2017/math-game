@@ -10,7 +10,7 @@ st.set_page_config(
 
 # 标题
 st.title("🧮 AI数学小老师")
-st.subheader("8岁蛋小绿作品")
+st.subheader("8岁程序员作品")
 
 # 选择题型
 topic = st.selectbox(
@@ -46,6 +46,10 @@ if topic == "面积练习":
             st.session_state.area_hint = f"面积 = 长 × 宽 = {length} × {width}"
         st.session_state.area_shape = shape
     
+    # 确保 area_hint 存在
+    if 'area_hint' not in st.session_state:
+        st.session_state.area_hint = "面积 = 长 × 宽"
+    
     st.info(st.session_state.area_question)
     st.caption(f"💡 提示：{st.session_state.area_hint}")
     st.write("面积是多少平方厘米？")
@@ -74,8 +78,7 @@ if topic == "面积练习":
 elif topic == "鸡兔同笼":
     st.header("🐔🐰 鸡兔同笼")
     
-    if 'cr_answer' not in st.session_state:
-        # 生成合理的数据
+    if 'cr_chicken' not in st.session_state:
         chicken = random.randint(3, 8)
         rabbit = random.randint(2, 6)
         total_heads = chicken + rabbit
@@ -85,6 +88,10 @@ elif topic == "鸡兔同笼":
         st.session_state.cr_chicken = chicken
         st.session_state.cr_rabbit = rabbit
         st.session_state.cr_hint = f"假设全是鸡，应该有{total_heads*2}只脚，多了{total_feet-total_heads*2}只，每只兔多2只脚"
+    
+    # 确保 hint 存在
+    if 'cr_hint' not in st.session_state:
+        st.session_state.cr_hint = "假设全是鸡，算多出来的脚"
     
     st.info(st.session_state.cr_question)
     st.caption(f"💡 提示：{st.session_state.cr_hint}")
@@ -108,7 +115,7 @@ elif topic == "鸡兔同笼":
     
     with col4:
         if st.button("下一题", key="cr_next"):
-            for key in ['cr_answer', 'cr_question', 'cr_chicken', 'cr_rabbit', 'cr_hint']:
+            for key in ['cr_question', 'cr_chicken', 'cr_rabbit', 'cr_hint']:
                 if key in st.session_state:
                     del st.session_state[key]
             st.rerun()
@@ -117,15 +124,13 @@ elif topic == "鸡兔同笼":
 elif topic == "分数加减":
     st.header("🍕 分数加减")
     
-    if 'fraction_answer' not in st.session_state:
-        # 同分母分数加减
+    if 'fraction_answer_num' not in st.session_state:
         denominator = random.choice([4, 5, 6, 8, 10])
         a = random.randint(1, denominator - 1)
         b = random.randint(1, denominator - 1)
         operation = random.choice(["加", "减"])
         
         if operation == "加":
-            # 确保和不超过1
             while a + b > denominator:
                 a = random.randint(1, denominator - 1)
                 b = random.randint(1, denominator - 1)
@@ -133,7 +138,6 @@ elif topic == "分数加减":
             st.session_state.fraction_answer_num = a + b
             st.session_state.fraction_hint = f"同分母相加，分母不变，分子相加：{a} + {b}"
         else:
-            # 确保a > b
             while a <= b:
                 a = random.randint(2, denominator - 1)
                 b = random.randint(1, a - 1)
@@ -142,6 +146,10 @@ elif topic == "分数加减":
             st.session_state.fraction_hint = f"同分母相减，分母不变，分子相减：{a} - {b}"
         
         st.session_state.fraction_denominator = denominator
+    
+    # 确保 hint 存在
+    if 'fraction_hint' not in st.session_state:
+        st.session_state.fraction_hint = "同分母分数相加减，分母不变"
     
     st.info(st.session_state.fraction_question)
     st.caption(f"💡 提示：{st.session_state.fraction_hint}")
@@ -162,7 +170,7 @@ elif topic == "分数加减":
     
     with col2:
         if st.button("下一题", key="fraction_next"):
-            for key in ['fraction_answer', 'fraction_question', 'fraction_answer_num', 'fraction_denominator', 'fraction_hint']:
+            for key in ['fraction_question', 'fraction_answer_num', 'fraction_denominator', 'fraction_hint']:
                 if key in st.session_state:
                     del st.session_state[key]
             st.rerun()
@@ -182,17 +190,19 @@ elif topic == "单位换算":
         direction = random.choice([True, False])
         
         if direction:
-            # 大单位转小单位
             a = random.randint(1, 10)
             st.session_state.unit_question = f"{a}{unit1} = ? {unit2}"
             st.session_state.unit_answer = a * rate
             st.session_state.unit_hint = f"1{unit1} = {rate}{unit2}，所以{a}{unit1} = {a}×{rate}"
         else:
-            # 小单位转大单位
             a = random.randint(1, 10) * rate
             st.session_state.unit_question = f"{a}{unit2} = ? {unit1}"
             st.session_state.unit_answer = a // rate
             st.session_state.unit_hint = f"{rate}{unit2} = 1{unit1}，所以{a}{unit2} = {a}÷{rate}"
+    
+    # 确保 hint 存在
+    if 'unit_hint' not in st.session_state:
+        st.session_state.unit_hint = "注意单位之间的进率"
     
     st.info(st.session_state.unit_question)
     st.caption(f"💡 提示：{st.session_state.unit_hint}")
@@ -240,6 +250,10 @@ elif topic == "植树问题":
         st.session_state.tree_answer = answer
         st.session_state.tree_hint = hint
     
+    # 确保 hint 存在
+    if 'tree_hint' not in st.session_state:
+        st.session_state.tree_hint = "先算间隔数，再看两端"
+    
     st.info(st.session_state.tree_question)
     st.caption(f"💡 提示：{st.session_state.tree_hint}")
     
@@ -265,6 +279,6 @@ elif topic == "植树问题":
 
 # 页脚
 st.sidebar.markdown("---")
-st.sidebar.write("👨‍👩‍👧 蛋小绿父子联合开发")
+st.sidebar.write("👨‍👩‍👧 父子联合开发")
 st.sidebar.write("🚀 用AI学习，而不是被学习")
 st.sidebar.write("📧 欢迎提建议！")
