@@ -10,12 +10,12 @@ st.set_page_config(
 
 # 标题
 st.title("🧮 AI数学小老师")
-st.subheader("8岁程序员作品")
+st.subheader("8岁蛋小绿作品")
 
 # 选择题型
 topic = st.selectbox(
     "选择你想挑战的题型：",
-    ["面积练习", "鸡兔同笼", "分数加减", "单位换算", "植树问题"]
+    ["基础运算", "面积练习", "鸡兔同笼", "分数加减", "单位换算", "植树问题"]
 )
 
 # 得分初始化
@@ -27,8 +27,73 @@ if 'question_count' not in st.session_state:
 st.sidebar.write(f"⭐ 当前得分：{st.session_state.score}")
 st.sidebar.write(f"📊 答题数：{st.session_state.question_count}")
 
+# ==================== 基础运算 ====================
+if topic == "基础运算":
+    st.header("🔢 基础运算")
+    
+    if 'basic_answer' not in st.session_state:
+        operation = random.choice(["加法", "减法", "乘法", "除法"])
+        
+        if operation == "加法":
+            a = random.randint(10, 99)
+            b = random.randint(10, 99)
+            st.session_state.basic_question = f"{a} + {b} = ?"
+            st.session_state.basic_answer = a + b
+            st.session_state.basic_hint = f"个位：{a%10}+{b%10}，十位：{a//10}+{b//10}，注意进位"
+            
+        elif operation == "减法":
+            a = random.randint(50, 99)
+            b = random.randint(10, 49)
+            st.session_state.basic_question = f"{a} - {b} = ?"
+            st.session_state.basic_answer = a - b
+            st.session_state.basic_hint = "不够减时向前借1"
+            
+        elif operation == "乘法":
+            a = random.randint(2, 9)
+            b = random.randint(2, 9)
+            st.session_state.basic_question = f"{a} × {b} = ?"
+            st.session_state.basic_answer = a * b
+            st.session_state.basic_hint = f"想乘法口诀：{a}的倍数"
+            
+        else:  # 除法
+            b = random.randint(2, 9)
+            answer = random.randint(2, 9)
+            a = b * answer
+            st.session_state.basic_question = f"{a} ÷ {b} = ?"
+            st.session_state.basic_answer = answer
+            st.session_state.basic_hint = f"想：{b} × ? = {a}"
+        
+        st.session_state.basic_operation = operation
+    
+    # 确保 hint 存在
+    if 'basic_hint' not in st.session_state:
+        st.session_state.basic_hint = "仔细计算，注意进位和借位"
+    
+    st.info(f"【{st.session_state.basic_operation}】{st.session_state.basic_question}")
+    st.caption(f"💡 提示：{st.session_state.basic_hint}")
+    
+    user_answer = st.number_input("你的答案：", min_value=0, step=1, key="basic_input")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("提交答案", key="basic_submit"):
+            st.session_state.question_count += 1
+            if user_answer == st.session_state.basic_answer:
+                st.success("🎉 答对了！")
+                st.balloons()
+                st.session_state.score += 10
+            else:
+                st.error(f"😅 答案是{st.session_state.basic_answer}")
+    
+    with col2:
+        if st.button("下一题", key="basic_next"):
+            for key in ['basic_answer', 'basic_question', 'basic_hint', 'basic_operation']:
+                if key in st.session_state:
+                    del st.session_state[key]
+            st.rerun()
+
 # ==================== 面积练习 ====================
-if topic == "面积练习":
+elif topic == "面积练习":
     st.header("📐 面积练习")
     
     if 'area_answer' not in st.session_state:
@@ -46,7 +111,7 @@ if topic == "面积练习":
             st.session_state.area_hint = f"面积 = 长 × 宽 = {length} × {width}"
         st.session_state.area_shape = shape
     
-    # 确保 area_hint 存在
+    # 确保 hint 存在
     if 'area_hint' not in st.session_state:
         st.session_state.area_hint = "面积 = 长 × 宽"
     
@@ -279,6 +344,6 @@ elif topic == "植树问题":
 
 # 页脚
 st.sidebar.markdown("---")
-st.sidebar.write("👨‍👩‍👧 父子联合开发")
+st.sidebar.write("👨‍👩‍👧 蛋小绿父子联合开发")
 st.sidebar.write("🚀 用AI学习，而不是被学习")
 st.sidebar.write("📧 欢迎提建议！")
